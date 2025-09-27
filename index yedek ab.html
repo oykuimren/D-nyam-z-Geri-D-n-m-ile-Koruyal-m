@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tekstil Geri Dönüşüm Puan Sistemi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Temel Stiller */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #2ecc71;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header ve Navigasyon */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: #f1c40f;
+        }
+        
+        .header-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: 1;
+        }
+        
+        .tree {
+            position: absolute;
+            bottom: 0;
+            width: 150px;
+            height: 200px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200"><path fill="%2334988d" d="M50,10 C30,30 20,60 30,90 C40,120 60,140 50,160 C40,180 60,200 50,200 L50,200 Z"/></svg>');
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        .tree.left {
+            left: 5%;
+        }
+        
+        .tree.right {
+            right: 5%;
+            transform: scaleX(-1);
+        }
+        
+        .flower {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23e74c3c"/><circle cx="30" cy="30" r="15" fill="%23f1c40f"/><circle cx="70" cy="30" r="15" fill="%23f1c40f"/><circle cx="30" cy="70" r="15" fill="%23f1c40f"/><circle cx="70" cy="70" r="15" fill="%23f1c40f"/></svg>');
+            background-repeat: no-repeat;
+            z-index: 1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .mini-flower {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23e74c3c"/><circle cx="30" cy="30" r="15" fill="%23f1c40f"/><circle cx="70" cy="30" r="15" fill="%23f1c40f"/><circle cx="30" cy="70" r="15" fill="%23f1c40f"/><circle cx="70" cy="70" r="15" fill="%23f1c40f"/></svg>');
+            background-repeat: no-repeat;
+            z-index: 1;
+            animation: miniFloat 4s ease-in-out infinite;
+        }
+        
+        .flower:nth-child(1) {
+            top: 20%;
+            left: 15%;
+            animation-delay: 0s;
+        }
+        
+        .flower:nth-child(2) {
+            top: 10%;
+            right: 20%;
+            animation-delay: 2s;
+        }
+        
+        .flower:nth-child(3) {
+            bottom: 15%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+        
+        .mini-flower:nth-child(4) {
+            top: 30%;
+            left: 10%;
+            animation-delay: 1s;
+        }
+        
+        .mini-flower:nth-child(5) {
+            top: 5%;
+            right: 15%;
+            animation-delay: 3s;
+        }
+        
+        .mini-flower:nth-child(6) {
+            bottom: 25%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+        
+        .mini-flower:nth-child(7) {
+            bottom: 5%;
+            left: 15%;
+            animation-delay: 4s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes miniFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(10deg); }
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+        
+        nav ul li a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        /* Hero Bölümü */
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: #555;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: 1;
+        }
+        
+        /* Bağış Hesaplama Bölümü */
+        .donation-calc {
+            padding: 3rem 0;
+            background-color: white;
+            text-align: center;
+        }
+        
+        .calc-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .calc-title {
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .weight-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .weight-option {
+            padding: 0.8rem 1.5rem;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+        
+        .weight-option:hover {
+            border-color: var(--primary);
+        }
+        
+        .weight-option.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .custom-weight {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .custom-weight input {
+            width: 100px;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .calc-result {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .calc-result h4 {
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .calc-result p {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        /* Proje Amacı ve Faydaları Bölümü */
+        .benefits-section {
+            padding: 4rem 0;
+            background-color: #f5f7fa;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .benefit-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .benefit-card i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .benefit-card h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .benefit-card p {
+            color: #666;
+        }
+        
+        /* Kart İşlemleri Bölümü */
+        .card-operations {
+            padding: 4rem 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--dark);
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+        
+        .operations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .operation-card {
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+        
+        .operation-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .operation-card i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .operation-card h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .operation-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Puan Hesaplama Bölümü */
+        .points-info {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .points-info h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .points-details {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        
+        .point-item {
+            margin: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            min-width: 200px;
+        }
+        
+        .point-item i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        /* Form Stilleri */
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+        }
+        
+        /* SSS Bölümü */
+        .faq-section {
+            padding: 4rem 0;
+            background-color: #f5f7fa;
+        }
+        
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .faq-question {
+            background-color: white;
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .faq-question:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .faq-question i {
+            transition: var(--transition);
+        }
+        
+        .faq-answer {
+            background-color: white;
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 1.5rem;
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        /* İletişim Bölümü */
+        .contact-section {
+            padding: 4rem 0;
+            background-color: white;
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .contact-card {
+            text-align: center;
+            padding: 2rem;
+            background-color: #f5f7fa;
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .contact-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-section h3:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-section ul li a {
+            color: #bbb;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-section ul li a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: modalFade 0.3s ease;
+        }
+        
+        @keyframes modalFade {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        /* Responsive Tasarım */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem;
+            }
+            
+            .auth-buttons {
+                margin-top: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .tree {
+                display: none;
+            }
+            
+            .points-details {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .weight-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .weight-option {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-bg"></div>
+        <div class="tree left"></div>
+        <div class="tree right"></div>
+        <div class="flower"></div>
+        <div class="flower"></div>
+        <div class="flower"></div>
+        <div class="mini-flower"></div>
+        <div class="mini-flower"></div>
+        <div class="mini-flower"></div>
+        <div class="mini-flower"></div>
+        
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-recycle"></i>
+                    <span>GeriDönüşümPuan</span>
+                </div>
+                
+                <nav>
+                    <ul>
+                        <li><a href="#anasayfa">Anasayfa</a></li>
+                        <li><a href="#bagis-hesapla">Bağış Hesapla</a></li>
+                        <li><a href="#amac-ve-faydalar">Amacımız</a></li>
+                        <li><a href="#kart-islemleri">Kart İşlemleri</a></li>
+                        <li><a href="#sss">SSS</a></li>
+                        <li><a href="#iletisim">İletişim</a></li>
+                    </ul>
+                </nav>
+                
+                <div class="auth-buttons">
+                    <button class="btn btn-secondary" id="loginBtn">Giriş Yap</button>
+                    <button class="btn btn-primary" id="registerBtn">Kart Oluştur</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Bölümü -->
+    <section class="hero" id="anasayfa">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <h1>Tekstil Atıklarınız Puanınız Olsun!</h1>
+            <p>1 kg tekstil atığınızı geri dönüştürün, 20 puan kazanın. Bu puanları toplu taşımada ücretsiz seyahat için kullanın! Her binişte sadece 4 puan.</p>
+            <a href="#bagis-hesapla" class="btn btn-primary">Hemen Başla</a>
+        </div>
+    </section>
+
+    <!-- Bağış Hesaplama Bölümü -->
+    <section class="donation-calc" id="bagis-hesapla">
+        <div class="container">
+            <h2 class="section-title">Bağışlanacak KG Hesaplama</h2>
+            
+            <div class="calc-container">
+                <h3 class="calc-title">Ne kadar tekstil atığı bağışlayacaksınız?</h3>
+                
+                <div class="weight-options">
+                    <div class="weight-option" data-weight="0.5">500 gr</div>
+                    <div class="weight-option" data-weight="0.8">800 gr</div>
+                    <div class="weight-option active" data-weight="1">1 kg</div>
+                    <div class="weight-option" data-weight="2">2 kg</div>
+                    <div class="weight-option" data-weight="3">3 kg</div>
+                    <div class="weight-option" data-weight="5">5 kg</div>
+                </div>
+                
+                <div class="custom-weight">
+                    <span>Veya özel miktar girin:</span>
+                    <input type="number" id="customWeight" min="0.1" step="0.1" placeholder="kg">
+                    <span>kg</span>
+                </div>
+                
+                <div class="calc-result">
+                    <h4>Kazanacağınız Puan:</h4>
+                    <p id="pointsEarned">20 puan</p>
+                    <h4>Toplu Taşıma Biniş Hakkı:</h4>
+                    <p id="rideCount">5 biniş</p>
+                </div>
+                
+                <button class="btn btn-primary" id="donateBtn">Bağış Yap ve Puan Kazan</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Proje Amacı ve Faydaları Bölümü -->
+    <section class="benefits-section" id="amac-ve-faydalar">
+        <div class="container">
+            <h2 class="section-title">Projemizin Amacı ve Faydaları</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 2rem;">Tekstil atıklarının geri dönüşümünü teşvik ederek hem çevre korumasına katkıda bulunmayı hem de vatandaşlarımıza ekonomik fayda sağlamayı amaçlıyoruz.</p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <i class="fas fa-leaf"></i>
+                    <h3>Çevre Koruma</h3>
+                    <p>Tekstil atıklarının doğaya zarar vermesini önleyerek daha temiz bir çevre oluşturuyoruz.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <i class="fas fa-recycle"></i>
+                    <h3>Kaynak Verimliliği</h3>
+                    <p>Geri dönüşüm sayesinde yeni ürünler için daha az ham madde kullanımı sağlıyoruz.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <i class="fas fa-bus"></i>
+                    <h3>Ekonomik Fayda</h3>
+                    <p>Vatandaşlarımız tekstil atıklarını geri dönüştürerek toplu taşıma masraflarını azaltıyor.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <i class="fas fa-hands-helping"></i>
+                    <h3>Sosyal Sorumluluk</h3>
+                    <p>Toplumda çevre bilincini artırarak sürdürülebilir bir gelecek için katkı sağlıyoruz.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kart İşlemleri Bölümü -->
+    <section class="card-operations" id="kart-islemleri">
+        <div class="container">
+            <h2 class="section-title">Kart İşlemleri</h2>
+            
+            <div class="points-info">
+                <h3>Puan Kazanma ve Kullanma Sistemi</h3>
+                <p>Tekstil atıklarınızı geri dönüştürerek kazandığınız puanları toplu taşımada kullanabilirsiniz.</p>
+                
+                <div class="points-details">
+                    <div class="point-item">
+                        <i class="fas fa-tshirt"></i>
+                        <h4>1 kg Tekstil Atığı</h4>
+                        <p>20 Puan Kazanın</p>
+                    </div>
+                    
+                    <div class="point-item">
+                        <i class="fas fa-bus"></i>
+                        <h4>1 Toplu Taşıma Binişi</h4>
+                        <p>4 Puan Kullanın</p>
+                    </div>
+                    
+                    <div class="point-item">
+                        <i class="fas fa-calculator"></i>
+                        <h4>Hesaplama</h4>
+                        <p>5 kg atık = 25 biniş</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="operations-grid">
+                <div class="operation-card">
+                    <i class="fas fa-search"></i>
+                    <h3>Puan Sorgula</h3>
+                    <p>Kart numaranızı girerek mevcut puanınızı öğrenin.</p>
+                    <button class="btn btn-primary" id="checkPointsBtn">Puan Sorgula</button>
+                </div>
+                
+                <div class="operation-card">
+                    <i class="fas fa-user-plus"></i>
+                    <h3>Kart Oluştur</h3>
+                    <p>Yeni bir geri dönüşüm kartı oluşturun ve puan kazanmaya başlayın.</p>
+                    <button class="btn btn-primary" id="createCardBtn">Kart Oluştur</button>
+                </div>
+                
+                <div class="operation-card">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <h3>Karta Giriş Yap</h3>
+                    <p>Mevcut kartınıza giriş yaparak işlemlerinizi gerçekleştirin.</p>
+                    <button class="btn btn-primary" id="cardLoginBtn">Karta Giriş Yap</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SSS Bölümü -->
+    <section class="faq-section" id="sss">
+        <div class="container">
+            <h2 class="section-title">Sıkça Sorulan Sorular</h2>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Bu sistem nasıl çalışıyor?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Tekstil atıklarınızı belirlenmiş geri dönüşüm noktalarına getirdiğinizde, her 1 kg atık için kartınıza 20 puan yüklenir. Bu puanları toplu taşıma araçlarında bilet yerine kullanabilirsiniz. Her biniş için 4 puan harcanır.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Hangi tekstil ürünlerini geri dönüştürebilirim?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Kullanılmış giysiler, ev tekstili ürünleri (çarşaf, perde, havlu vb.), ayakkabılar ve diğer tekstil ürünlerini geri dönüşüme kazandırabilirsiniz. Ürünlerin temiz ve kuru olması önemlidir.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Puanlarımı nasıl kullanabilirim?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Toplu taşıma araçlarına binerken kartınızı okutmak yerine, uygulamamız üzerinden puanlarınızı kullanarak ödeme yapabilirsiniz. Her biniş için 4 puan harcanır. Örneğin, 20 puan ile 5 kez toplu taşıma kullanabilirsiniz.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Kartımı kaybettiğimde ne yapmalıyım?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Kartınızı kaybettiğinizde hemen müşteri hizmetlerini arayarak kartınızı bloke ettirebilir ve yeni kart talep edebilirsiniz. Eski kartınızdaki puanlar yeni kartınıza aktarılacaktır.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Puanlarımın süresi doluyor mu?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Kazandığınız puanlar 1 yıl boyunca geçerlidir. Bu süre sonunda kullanılmayan puanlar sistemden silinir.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- İletişim Bölümü -->
+    <section class="contact-section" id="iletisim">
+        <div class="container">
+            <h2 class="section-title">Bize Ulaşın</h2>
+            
+            <div class="contact-info">
+                <div class="contact-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Adres</h3>
+                    <p>Çevre Mah. Geri Dönüşüm Cad. No: 123<br>İstanbul / Türkiye</p>
+                </div>
+                
+                <div class="contact-card">
+                    <i class="fas fa-phone"></i>
+                    <h3>Telefon</h3>
+                    <p>0 (212) 123 45 67</p>
+                </div>
+                
+                <div class="contact-card">
+                    <i class="fas fa-envelope"></i>
+                    <h3>E-posta</h3>
+                    <p>info@geridonusumpuan.com</p>
+                </div>
+            </div>
+            
+            <div class="form-container">
+                <h3>Mesaj Gönderin</h3>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Adınız Soyadınız</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">E-posta Adresiniz</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Mesajınız</label>
+                        <textarea id="message" rows="5" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Gönder</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Hakkımızda</h3>
+                    <p>Tekstil atıklarının geri dönüşümünü teşvik etmek ve çevre bilincini artırmak amacıyla kurulmuş bir projedir.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Hızlı Bağlantılar</h3>
+                    <ul>
+                        <li><a href="#anasayfa">Anasayfa</a></li>
+                        <li><a href="#bagis-hesapla">Bağış Hesapla</a></li>
+                        <li><a href="#amac-ve-faydalar">Amacımız</a></li>
+                        <li><a href="#kart-islemleri">Kart İşlemleri</a></li>
+                        <li><a href="#sss">SSS</a></li>
+                        <li><a href="#iletisim">İletişim</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>İletişim Bilgileri</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> Çevre Mah. Geri Dönüşüm Cad. No: 123, İstanbul</li>
+                        <li><i class="fas fa-phone"></i> 0 (212) 123 45 67</li>
+                        <li><i class="fas fa-envelope"></i> info@geridonusumpuan.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 GeriDönüşümPuan. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Pencereler -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Karta Giriş Yap</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="cardNumber">Kart Numarası</label>
+                    <input type="text" id="cardNumber" placeholder="16 haneli kart numaranız" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Şifre</label>
+                    <input type="password" id="password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Giriş Yap</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Yeni Kart Oluştur</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="fullName">Adınız Soyadınız</label>
+                    <input type="text" id="fullName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="emailReg">E-posta Adresiniz</label>
+                    <input type="email" id="emailReg" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Telefon Numaranız</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Adresiniz</label>
+                    <input type="text" id="address" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="passwordReg">Şifre Belirleyin</label>
+                    <input type="password" id="passwordReg" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Kart Oluştur</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal" id="pointsModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Puan Sorgula</h2>
+            <form id="pointsForm">
+                <div class="form-group">
+                    <label for="pointsCardNumber">Kart Numarası</label>
+                    <input type="text" id="pointsCardNumber" placeholder="16 haneli kart numaranız" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Puanları Sorgula</button>
+            </form>
+            
+            <div id="pointsResult" style="margin-top: 20px; display: none;">
+                <h3>Kart Bilgileri</h3>
+                <p><strong>Kart Sahibi:</strong> <span id="cardOwner">-</span></p>
+                <p><strong>Mevcut Puan:</strong> <span id="currentPoints">0</span> puan</p>
+                <p><strong>Son İşlem Tarihi:</strong> <span id="lastTransaction">-</span></p>
+                <p><strong>Toplu Taşıma Biniş Hakkı:</strong> <span id="modalRideCount">0</span> biniş</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Bağış Hesaplama İşlevleri
+        const weightOptions = document.querySelectorAll('.weight-option');
+        const customWeightInput = document.getElementById('customWeight');
+        const pointsEarnedElement = document.getElementById('pointsEarned');
+        const rideCountElement = document.getElementById('rideCount');
+        const donateBtn = document.getElementById('donateBtn');
+        
+        let selectedWeight = 1; // Varsayılan olarak 1 kg seçili
+        
+        // Ağırlık seçeneklerine tıklama işlevi
+        weightOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // Tüm seçeneklerden active sınıfını kaldır
+                weightOptions.forEach(opt => opt.classList.remove('active'));
+                // Tıklanan seçeneğe active sınıfını ekle
+                option.classList.add('active');
+                // Seçilen ağırlığı güncelle
+                selectedWeight = parseFloat(option.getAttribute('data-weight'));
+                // Hesaplamayı güncelle
+                updateCalculation();
+            });
+        });
+        
+        // Özel ağırlık girişi için dinleyici
+        customWeightInput.addEventListener('input', () => {
+            if (customWeightInput.value) {
+                // Tüm seçeneklerden active sınıfını kaldır
+                weightOptions.forEach(opt => opt.classList.remove('active'));
+                // Seçilen ağırlığı güncelle
+                selectedWeight = parseFloat(customWeightInput.value);
+                // Hesaplamayı güncelle
+                updateCalculation();
+            }
+        });
+        
+        // Hesaplama güncelleme işlevi
+        function updateCalculation() {
+            // 1 kg = 20 puan
+            const points = Math.round(selectedWeight * 20);
+            // 1 biniş = 4 puan
+            const rides = Math.floor(points / 4);
+            
+            // Sonuçları güncelle
+            pointsEarnedElement.textContent = `${points} puan`;
+            rideCountElement.textContent = `${rides} biniş`;
+        }
+        
+        // Bağış yap butonu işlevi
+        donateBtn.addEventListener('click', () => {
+            const points = Math.round(selectedWeight * 20);
+            alert(`${selectedWeight} kg tekstil atığı bağışıyla ${points} puan kazandınız!`);
+        });
+        
+        // Modal işlemleri
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const checkPointsBtn = document.getElementById('checkPointsBtn');
+        const cardLoginBtn = document.getElementById('cardLoginBtn');
+        const createCardBtn = document.getElementById('createCardBtn');
+        
+        const loginModal = document.getElementById('loginModal');
+        const registerModal = document.getElementById('registerModal');
+        const pointsModal = document.getElementById('pointsModal');
+        
+        const closeModals = document.querySelectorAll('.close-modal');
+        
+        // Modal açma işlevleri
+        loginBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+        });
+        
+        registerBtn.addEventListener('click', () => {
+            registerModal.style.display = 'flex';
+        });
+        
+        checkPointsBtn.addEventListener('click', () => {
+            pointsModal.style.display = 'flex';
+        });
+        
+        cardLoginBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+        });
+        
+        createCardBtn.addEventListener('click', () => {
+            registerModal.style.display = 'flex';
+        });
+        
+        // Modal kapatma işlevleri
+        closeModals.forEach(closeBtn => {
+            closeBtn.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+                registerModal.style.display = 'none';
+                pointsModal.style.display = 'none';
+            });
+        });
+        
+        // Pencere dışına tıklayınca modal kapatma
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+            if (e.target === registerModal) {
+                registerModal.style.display = 'none';
+            }
+            if (e.target === pointsModal) {
+                pointsModal.style.display = 'none';
+            }
+        });
+        
+        // SSS açılıp kapanması
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            
+            question.addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        });
+        
+        // Form gönderme işlemleri
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Giriş işlemi başarılı! Yönlendiriliyorsunuz...');
+            loginModal.style.display = 'none';
+        });
+        
+        document.getElementById('registerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Kartınız başarıyla oluşturuldu! Kart numaranız e-posta adresinize gönderildi.');
+            registerModal.style.display = 'none';
+        });
+        
+        document.getElementById('pointsForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const cardNumber = document.getElementById('pointsCardNumber').value;
+            
+            // Demo verileri
+            if (cardNumber === '1234567812345678') {
+                document.getElementById('cardOwner').textContent = 'Ahmet Yılmaz';
+                document.getElementById('currentPoints').textContent = '340';
+                document.getElementById('lastTransaction').textContent = '15.10.2023';
+                document.getElementById('modalRideCount').textContent = Math.floor(340 / 4); // 340 puan / 4 puan = 85 biniş
+            } else if (cardNumber === '8765432187654321') {
+                document.getElementById('cardOwner').textContent = 'Ayşe Demir';
+                document.getElementById('currentPoints').textContent = '120';
+                document.getElementById('lastTransaction').textContent = '20.10.2023';
+                document.getElementById('modalRideCount').textContent = Math.floor(120 / 4); // 120 puan / 4 puan = 30 biniş
+            } else {
+                document.getElementById('cardOwner').textContent = 'Kart bulunamadı';
+                document.getElementById('currentPoints').textContent = '0';
+                document.getElementById('lastTransaction').textContent = '-';
+                document.getElementById('modalRideCount').textContent = '0';
+            }
+            
+            document.getElementById('pointsResult').style.display = 'block';
+        });
+        
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Mesajınız başarıyla gönderildi! En kısa sürede size dönüş yapacağız.');
+            document.getElementById('contactForm').reset();
+        });
+        
+        // Sayfa yüklendiğinde animasyonlar
+        window.addEventListener('load', () => {
+            document.body.style.opacity = 0;
+            document.body.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                document.body.style.opacity = 1;
+            }, 100);
+            
+            // Bağış hesaplama bölümünü başlat
+            updateCalculation();
+        });
+    </script>
+</body>
+</html>
